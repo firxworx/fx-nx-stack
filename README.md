@@ -2,14 +2,28 @@
 
 A universal + modern full-stack foundation for scalable and maintainable business apps and platforms written in TypeScript.
 
-This WIP project stack is an opinionated set of frameworks, libraries, and configurations. The project emphasizes popular and well-regarded solutions to common web development problems, and enables observation of the DRY principle across the entire project.
+This WIP project stack is an opinionated set of frameworks, libraries, tools, and configurations that are intended to help meet common enterprise requirements related to scalability, maintainability, code quality, and developer productivity.
+
+The project emphasizes the use of popular and well-regarded patterns and solutions to common web development problems. The common language (TypeScript) and use of shared libraries helps enable application of the DRY principle throughout the enterprise and across the stack.
+
+## Project structure
 
 This project is managed as an [nx](https://nx.dev) monorepo that contains 2x core apps:
 
 - `apps/api` - back-end API powered by NestJS w/ TypeORM + Postgres
 - `apps/ui` - front-end client UI powered by React + NextJS
 
-The goal is to build up an integrated TypeScript project stack that contains patterns and solutions common to a wide variety of business applications.
+The project implements shared libraries that can be imported by other apps + libraries within the project. These are housed under the `libs/` folder. This folder contains libraries organized into groups by subfolder.
+
+- `libs/react/core` - react components that can be used across multiple apps - including [storybook](https://storybook.js.org/) configuration
+- `libs/shared` - TBD (e.g. for data-related interfaces that are common to the UI + API)
+
+Libraries can optionally be published as npm packages with additional configuration (refer to the [nx](https://nx.dev) docs).
+
+## Project features
+
+- tailwindcss for component styles - enables high developer productivity + enables effective re-use of components
+- storybook as a component gallery and to enable implementation of a design system and live documentation
 
 ## Nx Features
 
@@ -59,6 +73,14 @@ The local api development server is available at: <http://localhost:3333/>.
 In development mode, source files are watched for changes the the server(s) will reload when new changes are saved.
 
 The front-end is configured to proxy requests to `/api` to the back-end api. This behaviour is configured in `apps/ui/proxy.conf.json`. Refer to the nx docs for more details about this particular proxy solution.
+
+## Storybook
+
+[Storybook](https://storybook.js.org/)
+
+DRY is emphasized throughout the stack.
+
+Run `yarn storybook:lib:react-core` to run the storybook corresponding to the react-core library on <http://localhost:4400/>.
 
 ## Build
 
