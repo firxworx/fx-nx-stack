@@ -4,7 +4,8 @@
     "defaultBase": "main"
   },
   "cli": {
-    "defaultCollection": "@nrwl/next"
+    "defaultCollection": "@nrwl/next",
+    "packageManager": "yarn"
   },
   "implicitDependencies": {
     "package.json": {
