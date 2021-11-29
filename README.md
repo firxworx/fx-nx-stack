@@ -1,94 +1,107 @@
+# fx-nx-stack (WIP)
 
+A universal + modern full-stack foundation for scalable and maintainable business apps and platforms written in TypeScript.
 
-# FxNxStack
+This WIP project stack is an opinionated set of frameworks, libraries, tools, and configurations that are intended to help meet common enterprise requirements related to scalability, maintainability, code quality, and developer productivity.
 
-This project was generated using [Nx](https://nx.dev).
+The project emphasizes the use of popular and well-regarded patterns and solutions to common web development problems. The common language (TypeScript) and use of shared libraries helps enable application of the DRY principle throughout the enterprise and across the stack.
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+## Project structure
 
-🔎 **Smart, Extensible Build Framework**
+This project is managed as an [nx](https://nx.dev) monorepo that contains 2x core apps:
 
-## Adding capabilities to your workspace
+- `apps/api` - back-end API powered by NestJS w/ TypeORM + Postgres
+- `apps/ui` - front-end client UI powered by React + NextJS
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+The project implements shared libraries that can be imported by other apps + libraries within the project. These are housed under the `libs/` folder. This folder contains libraries organized into groups by subfolder.
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+- `libs/react/core` - react components that can be used across multiple apps - including [storybook](https://storybook.js.org/) configuration
+- `libs/shared` - TBD (e.g. for data-related interfaces that are common to the UI + API)
 
-Below are our core plugins:
+Libraries can optionally be published as npm packages with additional configuration (refer to the [nx](https://nx.dev) docs).
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+## Project features
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+- tailwindcss for component styles - enables high developer productivity + enables effective re-use of components
+- storybook as a component gallery and to enable implementation of a design system and live documentation
 
-## Generate an application
+## Nx Features
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+### Overview
 
-> You can use any of the plugins above to generate applications as well.
+Refer to the [nx](https://nx.dev) website and documentation for a complete overview of nx's powerful features, including generators and plugins that support popular libraries and frameworks.
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+- generate a react app: `nx g @nrwl/react:app app-name`
+  - generate a new component: `nx g @nrwl/react:component component-name --project=app-name`
+- generate a new shared library: `npx nx generate @nrwl/workspace:lib --name=lib-name`
+- generate a shared react component library: `nx g @nrwl/react:lib react-lib-name`
+  - other apps and libraries in the project can import from the shared library from: `@fx-nx-stack/react-lib-name`
 
-## Generate a library
+Use the `--directory` flag to generate libraries under a grouping folder. For example, to generate a library under `libs/shared/` run: `nx g @nrwl/react:lib react-lib-name --directory shared`. In configuration files such as `workspace.json`, the project name will be `shared-react-lib-name` (i.e. the grouping folder name is represented as a prefix followed by a dash).
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+To create an entirely new project repo / nx workspace configured to publish npm packages, run `yarn create nx-workspace --preset=npm`
 
-> You can also use any of the plugins above to generate libraries as well.
+Additional docs on structuring libraries can be found here: <https://nx.dev/l/a/structure/library-types>.
 
-Libraries are shareable across libraries and applications. They can be imported from `@fx-nx-stack/mylib`.
+Run `nx dep-graph` to generate a diagram of the project's dependencies.
+
+#### Example Commands
+
+```sh
+# generate react-core (downstream projects may import from @fx-nx-stack/react/core)
+nx g @nrwl/react:lib core --directory react --style=css
+```
+
+### Package dependencies
+
+Nx implements powerful tooling to manage project dependencies.
+
+All dependencies are specified in the common `package.json` file found in the project root.
+
+Each app includes its own `project.json` file that contains app-specific configurations related to Nx.
+
+Each app's `project.json` in this repo sets `generatePackageJson` option to `true` so that an app-specific `package.json` is generated at build-time for each app that contains only that app's dependencies.
 
 ## Development server
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+Run `yarn start` to start both the ui client and api server in parallel.
 
-## Code scaffolding
+The apps can be run separately via: `yarn start:ui` and `yarn start:ui`. It can be helpful during development to run the ui + api in seperate terminal tabs.
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+The local ui development server is available at: <http://localhost:4200/>.
+
+The local api development server is available at: <http://localhost:3333/>.
+
+In development mode, source files are watched for changes the the server(s) will reload when new changes are saved.
+
+The front-end is configured to proxy requests to `/api` to the back-end api. This behaviour is configured in `apps/ui/proxy.conf.json`. Refer to the nx docs for more details about this particular proxy solution.
+
+## Storybook
+
+[Storybook](https://storybook.js.org/) provides an interactive gallery of React components. It brings a number of business and developer benefits to front-end projects.
+
+Run `yarn storybook:lib:react-core` to run the storybook corresponding to the react-core library on <http://localhost:4400/>.
 
 ## Build
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+To build all apps in the project run `yarn build:all`. Run `yarn build:all:prod` for a fully production-optimized build.
 
-## Running unit tests
+The build artifacts output to the `dist/` folder.
+
+If using NextJS static export feature to output a static front-end app, it will output to `dist/ui/exported`.
+
+Refer to the `scripts` defined in `package.json` to understand how `nx` commands are used to initiate the build process.
+
+## Tests
+
+### Unit tests
 
 Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
 
 Run `nx affected:test` to execute the unit tests affected by a change.
 
-## Running end-to-end tests
+### E2E tests
 
 Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
 
 Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
