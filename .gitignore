@@ -1,14 +1,24 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# Refer to http://help.github.com/ignore-files/ for docs.
 
-# compiled output
+#############################################
+# Output Paths
+#############################################
+
 /dist
 /tmp
 /out-tsc
 
-# dependencies
+#############################################
+# Dependencies
+#############################################
+
 /node_modules
 
-# IDEs and editors
+#############################################
+# IDE - VSCode
+#############################################
+
+# common
 /.idea
 .project
 .classpath
@@ -17,14 +27,27 @@
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
+# vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# misc
+# vscode - project-specific exclusion for tailwind
+!.vscode/css_custom_data.json
+
+#############################################
+# System
+#############################################
+
+.DS_Store
+Thumbs.db
+
+#############################################
+# Misc
+#############################################
+
 /.sass-cache
 /connect.lock
 /coverage
@@ -34,10 +57,9 @@ yarn-error.log
 testem.log
 /typings
 
-# system
-.DS_Store
-Thumbs.db
+#############################################
+# Project
+#############################################
 
-# project
 /**/.env
 /notes
