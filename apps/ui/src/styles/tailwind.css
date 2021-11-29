@@ -1,0 +1,4 @@
+/** directives to support tailwindcss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
