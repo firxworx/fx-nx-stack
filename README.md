@@ -56,7 +56,9 @@ nx g @nrwl/react:lib core --directory react --style=css
 
 Nx implements powerful tooling to manage project dependencies.
 
-All dependencies are specified in a single `package.json` file found in the project root. Each app includes a `project.json` file containing app-specific configuration.
+All dependencies are specified in the common `package.json` file found in the project root.
+
+Each app includes its own `project.json` file that contains app-specific configurations related to Nx.
 
 Each app's `project.json` in this repo sets `generatePackageJson` option to `true` so that an app-specific `package.json` is generated at build-time for each app that contains only that app's dependencies.
 
@@ -76,9 +78,7 @@ The front-end is configured to proxy requests to `/api` to the back-end api. Thi
 
 ## Storybook
 
-[Storybook](https://storybook.js.org/)
-
-DRY is emphasized throughout the stack.
+[Storybook](https://storybook.js.org/) provides an interactive gallery of React components. It brings a number of business and developer benefits to front-end projects.
 
 Run `yarn storybook:lib:react-core` to run the storybook corresponding to the react-core library on <http://localhost:4400/>.
 
