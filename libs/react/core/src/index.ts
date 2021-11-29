@@ -1,1 +1,1 @@
-export * from './lib/react-core'
+export * from './lib/Example'
