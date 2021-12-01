@@ -13,7 +13,7 @@ import helmet from 'helmet'
 import * as cookieParser from 'cookie-parser'
 import compression from 'compression'
 
-import { AppModule } from './app/app.module'
+import { AppModule } from './app.module'
 import { AppConfig } from './config/types/app-config.interface'
 import { useContainer } from 'class-validator'
 import { NestExpressApplication } from '@nestjs/platform-express'
