@@ -33,27 +33,28 @@ async function bootstrap(): Promise<NestExpressApplication> {
     throw new Error('Error resolving app config (undefined)')
   }
 
-  // the value passed to NestJS' setGlobalPrefix() should not begin with a slash so it is removed via regex from the basePath if present
-  const globalPrefixValue = `${appConfig.basePath.replace(/^\/+/, '')}/${appConfig.apiVersion}`
+  // set global prefix (base uri the api server will listen on)
+  const globalPrefixValue = `${appConfig.basePath}/${appConfig.apiVersion}`
   app.setGlobalPrefix(globalPrefixValue)
 
-  // enable class-validator to use classes via NestJS direct injection (DI) - @see https://github.com/nestjs/nest/issues/528
-  useContainer(app.select(AppModule), { fallback: true }) // fallbackOnErrors: true
+  // enable class-validator to use classes via NestJS direct injection (DI)
+  useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
-  // ensure the `onApplicationShutdown()` hooks of providers are called if process receives a shutdown signal
-  // shutdown hooks are also important for terminus-powered healthchecks
+  // ensure provider `onApplicationShutdown()` hooks are called if process receives a shutdown signal (also important for healthchecks)
   app.enableShutdownHooks()
 
+  // configure ClassSerializerInterceptor to serialize dto/entity classes returned as responses to json
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
+  // configure ValidationPipe to process incoming requests
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // strip validated object of properties that do not have validation decorators in the entity/dto
-      transform: true, // enable class-transformer to transform plain objects into classes via `plainToClass()`; use in conjuction with `@Type()` decorator
+      transform: true, // enable class-transformer to transform plain objects into classes via `plainToClass()` (use in conjuction with `@Type()` decorator)
       transformOptions: {
         enableImplicitConversion: false,
       },
-      forbidNonWhitelisted: true, // throw if an unrecognized (non-decorated) property is received
+      forbidNonWhitelisted: true, // throw if an unrecognized property is received
       // disableErrorMessages: true, // consider making an env config option: may want to disable verbose errors in production
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       exceptionFactory: (errors: ValidationError[]) =>
@@ -78,16 +79,16 @@ async function bootstrap(): Promise<NestExpressApplication> {
     // allowedHeaders: ...
   })
 
-  // cookie-parser is express middleware that populates `req.cookies`
+  // enable express middleware that populates `req.cookies`
   app.use(cookieParser.default())
 
-  // conditionally use compression (express middleware) per app config
+  // conditionally enable express middleware for compression
   if (appConfig.express.compression) {
     logger.log('enabling compression via express middleware')
     app.use(compression())
   }
 
-  // conditionally trust proxy (trust X-Forwarded-* headers)
+  // conditionally enable express trust proxy behaviour (trust X-Forwarded-* headers)
   if (appConfig.express.trustProxy) {
     logger.log('enabling express trust proxy setting')
     app.enable('trust proxy')
@@ -111,5 +112,6 @@ async function bootstrap(): Promise<NestExpressApplication> {
 try {
   bootstrap()
 } catch (error: unknown) {
-  console.error(error)
+  console.error((error instanceof Error && error.message) || String(error))
+  console.error((error instanceof Error && error.stack) || '---')
 }

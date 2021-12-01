@@ -13,7 +13,7 @@ export default registerAs('app', (): AppConfig => {
   return {
     origin: process.env.ORIGIN,
     port: PORT,
-    basePath: process.env.BASE_PATH ?? DEFAULT_BASE_PATH,
+    basePath: (process.env.BASE_PATH ?? DEFAULT_BASE_PATH).replace(/^\/+/, ''),
     apiVersion: process.env.API_VERSION ?? DEFAULT_API_VERSION,
     express: {
       compression: Boolean(process.env.COMPRESSION) ?? false,
