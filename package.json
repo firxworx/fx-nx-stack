@@ -24,7 +24,11 @@
     "test": "nx run-many --target=test --all --parallel",
     "test:ui": "nx test ui",
     "test:api": "nx test api",
-    "update": "nx migrate latest"
+    "update": "nx migrate latest",
+    "docker:postgres:up": "docker compose up -d postgres && exit 0",
+    "docker:postgres:down": "docker compose down postgres",
+    "docker:postgres:cli": "docker exec -it postgres bash",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
@@ -51,8 +55,11 @@
     "core-js": "^3.19.1",
     "helmet": "^4.6.0",
     "next": "12.0.4",
+    "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "pg": "^8.7.1",
+    "pg-protocol": "^1.5.0",
     "postcss": "^8.4.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",

@@ -1,0 +1,82 @@
+version: '3.8'
+
+# @starter revise per project requirements
+# @starter update the `image` and `container_name` in the api service below
+# @starter uncomment and edit postgres, redis, and adminer-related properties if/as required
+
+services:
+  api:
+    image: starter/project-api
+    container_name: fxnx_api
+    build:
+      context: .
+      # target: development
+      args:
+        NODE_ENV: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports: # format: host_port:container_port
+      - ${PORT:-3333}:${PORT:-3333}
+      - 9229:9229 # debug port
+    # env_file:
+    #   - .env
+    networks:
+      - project_network
+    links:
+      - postgres:postgres
+    depends_on:
+      - postgres
+    command: dumb-init node dist/main # command: dumb-init yarn start:prod
+    restart: unless-stopped
+
+    # api
+    # environment:
+    #   - NODE_ENV=production
+    #   - VERSION=1.0
+    # depends_on:
+    #   - redis
+    #   - postgres
+    # links:
+    #   - postgres:postgres
+
+  # redis:
+  #   container_name: fxnx_redis
+  #   image: redis:5
+  #   networks:
+  #     - project_network
+
+  postgres:
+    image: 'postgres:${POSTGRES_VERSION:-13.2}'
+    container_name: fxnx_postgres
+    # image: postgres:13.2 # postgres:alpine
+    # env_file:
+    #   - .env # refer to POSTGRES_* env vars
+    environment:
+      TZ: UTC
+      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_DB: fxnx
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      # host_port:container_port
+      - '${POSTGRES_PORT:-5477}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # ./db/initdb.d:/docker-entrypoint-initdb.d  # https://hub.docker.com/_/postgres/ (only runs if data dir empty)
+    networks:
+      - project_network
+    restart: always
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #       - 8080:8080
+
+networks:
+  project_network:
+
+volumes:
+  pgdata:
