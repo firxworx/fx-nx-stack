@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { SiteLayout } from '../components/layout/SiteLayout'
 
 import '../styles/tailwind.css'
 
@@ -9,11 +10,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to ui!</title>
       </Head>
-      <div>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
+      <SiteLayout>
+        <Component {...pageProps} />
+      </SiteLayout>
     </>
   )
 }
