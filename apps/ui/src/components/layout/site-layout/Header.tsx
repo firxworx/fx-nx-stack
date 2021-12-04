@@ -1,17 +1,24 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
 import { Popover, Transition } from '@headlessui/react'
+
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
 import { Logo } from '../../brand/Logo'
 
-const navigation = [
-  { name: 'Project', href: '#' },
-  { name: 'Team', href: '#' },
-  { name: 'About', href: '#' },
-]
+export interface NavigationLink {
+  name: string
+  href: string
+}
 
-export const Header: React.FC = () => {
+export interface HeaderProps {
+  navigationLinks: Array<NavigationLink>
+}
+
+/**
+ * Header of SiteLayout that displays branding and implements responsive navigation menu.
+ */
+export const Header: React.FC<HeaderProps> = ({ navigationLinks }) => {
   return (
     <Popover as="header" className="relative">
       {({ open }) => (
@@ -37,7 +44,7 @@ export const Header: React.FC = () => {
                   </div>
                 </div>
                 <div className="hidden space-x-10 lg:flex lg:ml-10">
-                  {navigation.map((item) => (
+                  {navigationLinks.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -87,7 +94,7 @@ export const Header: React.FC = () => {
                 </div>
                 <div className="pt-5 pb-6">
                   <div className="px-2 space-y-1">
-                    {navigation.map((item) => (
+                    {navigationLinks.map((item) => (
                       <Link key={item.name} href={item.href}>
                         <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">
                           {item.name}

@@ -1,15 +1,22 @@
 import React, { ErrorInfo } from 'react'
 
+/**
+ * React Error Boundary to trap errors, display a fallback, and prevent crashing the entire UI.
+ *
+ * This component can be modified to report errors to an API, logs, and/or metrics service.
+ *
+ * {@link https://reactjs.org/docs/error-boundaries.html}
+ */
 export class ErrorBoundary extends React.Component {
   public state = { hasError: false }
 
   static getDerivedStateFromError(_: Error) {
-    // update state so the next render shows the fallback UI
+    // update state so that the next render shows the fallback UI
     return { hasError: true }
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // log error to web service e.g. logToService(error, info)
+    // log error to web service here e.g. logErrorToService(error, info)
     console.error(error, info)
   }
 

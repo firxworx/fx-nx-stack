@@ -1,5 +1,8 @@
 import Link from 'next/link'
 
+/**
+ * Footer of SiteLayout.
+ */
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-100 border-t-2 border-gray-200">
