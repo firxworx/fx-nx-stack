@@ -57,8 +57,8 @@ export const Header: React.FC<HeaderProps> = ({ navigationLinks }) => {
               </div>
               <div className="hidden lg:flex lg:items-center lg:space-x-6">
                 <Link href="/sign-in">
-                  <a className="py-2 px-6 bg-gray-100 border-2 border-gray-200 rounded-md text-base font-medium text-gray-900 hover:bg-gray-200">
-                    Login
+                  <a className="py-2 px-6 bg-gray-100 border-2 border-gray-200 hover:border-green-600 rounded-md text-base font-medium text-gray-600 hover:text-green-600 hover:bg-gray-50">
+                    Sign In
                   </a>
                 </Link>
               </div>
