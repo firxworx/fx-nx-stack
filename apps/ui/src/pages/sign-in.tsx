@@ -1,7 +1,13 @@
+import { useCallback } from 'react'
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik'
+import * as Yup from 'yup'
+
+import { useIsMountedRef } from '@fx-nx-stack/react/hooks'
 
 import { Logo } from '../components/brand/Logo'
 import { FormInput } from '../components/inputs/formik/FormInput'
+import { signIn } from '../backend'
+import { useRouter } from 'next/dist/client/router'
 
 export interface SignInFormValues {
   email: string
@@ -13,10 +19,44 @@ const initialValues: SignInFormValues = {
   password: '',
 }
 
+const validationSchema = Yup.object({
+  email: Yup.string().required('Email is required').email('Email invalid'),
+  password: Yup.string().required('Password is required'),
+})
+
 export function SignInPage() {
-  const handleSubmit = () => {
-    alert('@todo - Form Submit')
-  }
+  const router = useRouter()
+  const isMountedRef = useIsMountedRef()
+
+  const handleSignInSuccess = useCallback(() => {
+    router.push('/')
+  }, [])
+
+  const handleSubmit = useCallback(async (values: SignInFormValues, formikHelpers: FormikHelpers<SignInFormValues>) => {
+    try {
+      await signIn(values.email, values.password)
+
+      if (isMountedRef.current) {
+        formikHelpers.setStatus({
+          success: true,
+          error: null,
+        })
+
+        // if (typeof onSignInSuccess === 'function') {
+        //   onSignInSuccess()
+        // }
+
+        handleSignInSuccess()
+      }
+    } catch (error) {
+      if (isMountedRef.current) {
+        formikHelpers.setStatus({
+          success: false,
+          error: (error && error instanceof Error && error.message) || String(error),
+        })
+      }
+    }
+  }, [])
 
   const handlePasswordReset = () => {
     alert('@todo - Password reset functionality')
@@ -32,11 +72,7 @@ export function SignInPage() {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="py-8 px-4 shadow sm:rounded-lg sm:px-10 bg-gray-100 border-2">
             <h2 className="mb-4 text-center text-2xl font-extrabold text-gray-700">Sign in</h2>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleSubmit}
-              // validationSchema={validationSchema}
-            >
+            <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
               {(formikProps: FormikProps<SignInFormValues>) => (
                 <Form noValidate autoComplete="off" className="space-y-4">
                   <FormInput name="email" type="email" label="Email address" />

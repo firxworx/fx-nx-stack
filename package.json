@@ -69,9 +69,11 @@
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.9",
     "rxjs": "^7.0.0",
+    "swr": "^1.1.0",
     "tailwindcss": "^2.2.19",
     "tslib": "^2.0.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",

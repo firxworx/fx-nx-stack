@@ -5,6 +5,8 @@ import { SiteLayout } from '../components/layout/SiteLayout'
 
 import '../styles/tailwind.css'
 
+// const isSSR = typeof window === "undefined"
+
 const navigationLinks: Array<NavigationLink> = [
   { name: 'Project', href: '#' },
   { name: 'Team', href: '#' },
