@@ -9,7 +9,7 @@ const TestComponent: React.FC = () => {
 
 // @todo - additional tests of component behaviour
 describe('useIsMountedRef', () => {
-  it('does not interfere with host component reder', () => {
+  it('does not interfere with render of host component', () => {
     const { baseElement } = render(<TestComponent />)
     expect(baseElement).toBeTruthy()
   })

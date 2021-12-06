@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 
 /**
  * React hook that returns a ref with value `true` when its enclosing component is mounted and `false` when unmounted.
@@ -22,7 +22,7 @@ import { useRef, useEffect } from 'react'
  *
  * @returns a ref with a boolean indicating if the containing component is mounted
  */
-export function useIsMountedRef() {
+export const useIsMountedRef = (): React.MutableRefObject<boolean> => {
   const isMountedRef = useRef(true)
 
   useEffect(() => {
