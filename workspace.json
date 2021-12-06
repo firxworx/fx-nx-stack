@@ -2,7 +2,9 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "data-types": "libs/data/types",
     "react-core": "libs/react/core",
+    "react-hooks": "libs/react/hooks",
     "storybook-e2e-core-e2e": "apps/storybook-e2e/core-e2e",
     "ui": "apps/ui",
     "ui-e2e": "apps/ui-e2e"
