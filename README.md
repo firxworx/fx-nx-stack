@@ -64,6 +64,8 @@ Each app's `project.json` in this repo sets `generatePackageJson` option to `tru
 
 ## Development server
 
+To start the postgres database server defined in `docker-compose.yml` run: `yarn docker:postgres:up`
+
 Run `yarn start` to start both the ui client and api server in parallel.
 
 The apps can be run separately via: `yarn start:ui` and `yarn start:ui`. It can be helpful during development to run the ui + api in seperate terminal tabs.
