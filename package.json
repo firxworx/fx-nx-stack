@@ -9,7 +9,7 @@
     "NextJS",
     "NextJS"
   ],
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "nx run-many --target=serve --projects=ui,api --parallel",
     "start:ui": "nx serve ui",
@@ -21,7 +21,8 @@
     "build:api": "nx build api",
     "build:all:prod": "nx run-many --target=build --projects=ui,api --parallel --prod",
     "storybook:lib:react-core": "nx storybook react-core",
-    "test": "nx run-many --target=test --all --parallel",
+    "test:all": "nx run-many --target=test --all --parallel",
+    "test:affected": "nx affected:test --all --codeCoverage --skip-nx-cache",
     "test:ui": "nx test ui",
     "test:api": "nx test api",
     "update": "nx migrate latest",
