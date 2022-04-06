@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik'
 import * as Yup from 'yup'
 
-import { useIsMountedRef } from '@fx-nx-stack/react/hooks'
+// import { useIsMountedRef } from '@fx-nx-stack/react/hooks' // @todo possibly refactor to use hooks library
 
 import { Logo } from '../components/brand/Logo'
 import { FormInput } from '../components/inputs/formik/FormInput'
@@ -26,40 +26,50 @@ const validationSchema = Yup.object({
 
 export function SignInPage() {
   const router = useRouter()
-  const isMountedRef = useIsMountedRef()
+  const isMountedRef = useRef(true)
 
-  const handleSignInSuccess = useCallback(() => {
-    router.push('/')
-  }, [])
-
-  const handleSubmit = useCallback(async (values: SignInFormValues, formikHelpers: FormikHelpers<SignInFormValues>) => {
-    try {
-      await signIn(values.email, values.password)
-
-      if (isMountedRef.current) {
-        formikHelpers.setStatus({
-          success: true,
-          error: null,
-        })
-
-        // if (typeof onSignInSuccess === 'function') {
-        //   onSignInSuccess()
-        // }
-
-        handleSignInSuccess()
-      }
-    } catch (error) {
-      if (isMountedRef.current) {
-        formikHelpers.setStatus({
-          success: false,
-          error: (error && error instanceof Error && error.message) || String(error),
-        })
-      }
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
     }
   }, [])
 
+  const handleSignInSuccess = useCallback(() => {
+    router.push('/')
+  }, [router])
+
+  const handleSubmit = useCallback(
+    async (values: SignInFormValues, formikHelpers: FormikHelpers<SignInFormValues>) => {
+      try {
+        await signIn(values.email, values.password)
+
+        if (isMountedRef.current) {
+          formikHelpers.setStatus({
+            success: true,
+            error: null,
+          })
+
+          // if (typeof onSignInSuccess === 'function') {
+          //   onSignInSuccess()
+          // }
+
+          handleSignInSuccess()
+        }
+      } catch (error) {
+        if (isMountedRef.current) {
+          formikHelpers.setStatus({
+            success: false,
+            error: (error && error instanceof Error && error.message) || String(error),
+          })
+        }
+      }
+    },
+    [handleSignInSuccess],
+  )
+
   const handlePasswordReset = () => {
-    alert('@todo - Password reset functionality')
+    // @todo implmement handle password reset on sign-in
+    alert('unimplemented (TBD) - password reset functionality')
   }
 
   return (
