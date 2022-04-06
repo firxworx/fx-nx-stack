@@ -19,6 +19,8 @@
     "build:all": "nx run-many --target=build --projects=ui,api --parallel",
     "build:ui": "nx build ui",
     "build:api": "nx build api",
+    "build:ui:prod": "nx build ui --prod",
+    "build:api:prod": "nx build api --prod",
     "build:all:prod": "nx run-many --target=build --projects=ui,api --parallel --prod",
     "storybook:lib:react-core": "nx storybook react-core",
     "test:all": "nx run-many --target=test --all --parallel",
