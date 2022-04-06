@@ -14,11 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "@fx-nx-stack/data/types": ["libs/data/types/src/index.ts"],
-      "@fx-nx-stack/react/core": ["libs/react/core/src/index.ts"],
-      "@fx-nx-stack/react/hooks": ["libs/react/hooks/src/index.ts"]
-    }
+    "paths": {}
   },
   "exclude": ["node_modules", "tmp"]
 }
