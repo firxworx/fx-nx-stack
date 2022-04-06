@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ navigationLinks }) => {
                   <Link href="/">
                     <a>
                       <span className="sr-only">App Home</span>
-                      <Logo className="h-8 w-auto sm:h-10 text-green-600" />
+                      <Logo className="h-8 w-auto sm:h-10 text-emerald-600" />
                     </a>
                   </Link>
                   <div className="-mr-2 flex items-center lg:hidden">
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ navigationLinks }) => {
               </div>
               <div className="hidden lg:flex lg:items-center lg:space-x-6">
                 <Link href="/sign-in">
-                  <a className="py-2 px-6 bg-gray-100 border-2 border-gray-200 hover:border-green-600 rounded-md text-base font-medium text-gray-600 hover:text-green-600 hover:bg-gray-50">
+                  <a className="py-2 px-6 bg-gray-100 border-2 border-gray-200 hover:border-emerald-600 rounded-md text-base font-medium text-gray-600 hover:text-emerald-600 hover:bg-gray-50">
                     Sign In
                   </a>
                 </Link>
@@ -75,15 +75,11 @@ export const Header: React.FC<HeaderProps> = ({ navigationLinks }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Popover.Panel
-              focus
-              static
-              className="absolute z-30 top-0 inset-x-0 transition transform origin-top-right lg:hidden"
-            >
+            <Popover.Panel focus static className="absolute z-30 top-0 inset-x-0 transition origin-top-right lg:hidden">
               <div className="rounded-b-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                 <div className="px-5 pt-4 flex items-center justify-between">
                   <div>
-                    <Logo className="h-8 sm:h-10 w-auto text-green-600" />
+                    <Logo className="h-8 sm:h-10 w-auto text-emerald-600" />
                   </div>
                   <div className="-mr-2">
                     <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-100">

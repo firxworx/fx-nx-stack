@@ -15,11 +15,7 @@ module.exports = {
     // leverage nx to dynamically calculate glob pattern that covers components imported from other libs/apps in the project:
     ...createGlobPatternsForDependencies(__dirname),
   ],
-  darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
-  },
-  variants: {
     extend: {},
   },
   plugins: [],

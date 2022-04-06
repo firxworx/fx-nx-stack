@@ -76,7 +76,7 @@ export function SignInPage() {
     <>
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <Logo className="mx-auto h-14 w-auto text-green-600" />
+          <Logo className="mx-auto h-14 w-auto text-emerald-600" />
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -90,7 +90,7 @@ export function SignInPage() {
                   <div className="pt-4">
                     <button
                       type="submit"
-                      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                     >
                       Sign in
                     </button>
@@ -99,7 +99,7 @@ export function SignInPage() {
                     <div className="text-sm">
                       <span
                         onClick={handlePasswordReset}
-                        className="cursor-pointer font-medium text-green-600 hover:text-green-500"
+                        className="cursor-pointer font-medium text-emerald-600 hover:text-emerald-500"
                       >
                         Reset Password
                       </span>
