@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, INestApplication } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../src/generated/prisma-client' // default configuration: '@prisma/client'
 
 /**
  * NestJS service that wraps the Prisma database client.
