@@ -7,8 +7,9 @@ import authConfig from './config/auth.config'
 import databaseConfig from './config/database.config'
 import { AnyExceptionFilter } from './filters/any-exception.filter'
 import { AuthModule } from './modules/auth/auth.module'
-import { DatabaseModule } from './modules/database/database.module'
+// import { DatabaseModule } from './modules/database/database.module'
 import { UsersModule } from './modules/users/users.module'
+import { PrismaService } from './prisma.service'
 
 @Module({
   imports: [
@@ -16,11 +17,11 @@ import { UsersModule } from './modules/users/users.module'
       isGlobal: true,
       load: [appConfig, authConfig, databaseConfig],
     }),
-    DatabaseModule,
+    // DatabaseModule,
     AuthModule,
     UsersModule,
   ],
   controllers: [],
-  providers: [{ provide: APP_FILTER, useClass: AnyExceptionFilter }],
+  providers: [{ provide: APP_FILTER, useClass: AnyExceptionFilter }, PrismaService],
 })
 export class AppModule {}

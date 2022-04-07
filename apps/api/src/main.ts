@@ -101,6 +101,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
     logger.log(`🚀 Application environment: <${process.env.NODE_ENV}>`)
     logger.log(`🚀 Application listening on port <${appConfig.port}> at path <${globalPrefixValue}>`)
     logger.log(`🚀 Accepting requests from origin: <${appConfig.origin}>`)
+    logger.log('db url', process.env.DATABASE_URL)
   })
 
   const url = await app.getUrl()
