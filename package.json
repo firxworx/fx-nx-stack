@@ -17,6 +17,7 @@
     "generate": "nx generate",
     "prisma:generate": "npx prisma generate --schema apps/api/prisma/schema.prisma",
     "prisma:seed": "npx prisma db seed",
+    "prisma:db:push": "npx dotenv -e apps/api/.env -- npx prisma db push --schema apps/api/prisma/schema.prisma",
     "prebuild": "yarn prisma:generate",
     "build": "yarn build:all",
     "build:all": "nx run-many --target=build --projects=ui,api --parallel",
