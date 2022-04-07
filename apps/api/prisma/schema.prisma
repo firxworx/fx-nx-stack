@@ -1,0 +1,38 @@
+// Prisma schema file
+// Docs: https://pris.ly/d/prisma-schema
+//
+// Client docs: https://www.prisma.io/docs/concepts/components/prisma-client
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // shadowDatabaseUrl = env("DATABASE_URL")
+}
+
+// example of native field attributes: @db.VarChar(200) (String maps to 'text' by default)
+// note: may require CREATE EXTENSION pgcrypto; if it doesn't exist on target db
+// `@unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid` // per PG docs gen_random_uuid() uses v4 -  uuid-ossp required
+// `@id @default(dbgenerated("public.uuid_generate_v4()"))` // per SO public is required
+
+model User {
+  id    Int           @id @default(autoincrement())
+  uuid  String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email String        @unique
+  name  String?
+  createdAt DateTime  @default(now())
+  posts Post[]
+}
+
+model Post {
+  id        Int       @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean?  @default(false)
+  author    User?     @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
