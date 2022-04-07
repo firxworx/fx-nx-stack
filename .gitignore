@@ -61,6 +61,13 @@ testem.log
 # Project
 #############################################
 
+# configuration
 /**/.env
+
+# generated files e.g. prisma client (database)
+/apps/**/src/generated
+/libs/**/src/generated
+
+# process
 /notes
 /wip
