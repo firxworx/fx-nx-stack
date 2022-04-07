@@ -9,6 +9,7 @@ async function seed() {
   const user: Prisma.UserCreateInput = {
     name: 'Admin User',
     email: 'admin@example.com',
+    password: 'example', // @todo generate pass w/ hash
   }
 
   await client.user.create({ data: user })

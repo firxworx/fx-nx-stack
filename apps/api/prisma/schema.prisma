@@ -6,11 +6,15 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma-client"
+
+  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/referential-integrity
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  referentialIntegrity = "foreignKeys"
   // shadowDatabaseUrl = env("DATABASE_URL")
 }
 
@@ -19,20 +23,49 @@ datasource db {
 // `@unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid` // per PG docs gen_random_uuid() uses v4 -  uuid-ossp required
 // `@id @default(dbgenerated("public.uuid_generate_v4()"))` // per SO public is required
 
+// apparently no concepts of 'base' model, partials, mixins, etc so audit fields need to be repeated
+
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
-  id    Int           @id @default(autoincrement())
-  uuid  String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email String        @unique
-  name  String?
-  createdAt DateTime  @default(now())
+  id            Int         @id @default(autoincrement())
+  uuid          String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String      @unique
+  name          String?
+
+  refreshToken  RefreshToken?
+  password      String
+  role          Role        @default(USER)
+
+  // createdAt  DateTime  @default(now())
+  timezone      String      @default("Etc/UTC")
+
+  // prisma default with DateTime will automatically convert to UTC
+  // timestamptz @db.Timestamptz(x) where x is seconds precision (e.g. 3)
+  createdAt     DateTime    @default(now()) @db.Timestamptz()
+  updatedAt     DateTime    @db.Timestamptz() @updatedAt
+
+  // emailVerifiedAt DateTime
+
   posts Post[]
 }
 
+model RefreshToken {
+  token         String    @id
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
+  expiryDate    DateTime
+}
+
+
 model Post {
-  id        Int       @default(autoincrement()) @id
+  id        Int         @default(autoincrement()) @id
   title     String
   content   String?
-  published Boolean?  @default(false)
-  author    User?     @relation(fields: [authorId], references: [id])
+  published Boolean?    @default(false)
+  author    User?       @relation(fields: [authorId], references: [id])
   authorId  Int?
 }
