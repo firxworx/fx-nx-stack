@@ -10,6 +10,9 @@
     "NextJS"
   ],
   "private": false,
+  "prisma": {
+    "seed": "ts-node apps/api/prisma/seed.ts"
+  },
   "scripts": {
     "start": "nx run-many --target=serve --projects=ui,api --parallel",
     "start:ui": "nx serve ui",
@@ -18,6 +21,7 @@
     "prisma:generate": "npx prisma generate --schema apps/api/prisma/schema.prisma",
     "prisma:seed": "npx prisma db seed",
     "prisma:db:push": "npx dotenv -e apps/api/.env -- npx prisma db push --schema apps/api/prisma/schema.prisma",
+    "prisma:studio": "npx dotenv -e apps/api/.env -- npx prisma studio --schema apps/api/prisma/schema.prisma",
     "prebuild": "yarn prisma:generate",
     "build": "yarn build:all",
     "build:all": "nx run-many --target=build --projects=ui,api --parallel",
