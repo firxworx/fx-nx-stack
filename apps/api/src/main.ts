@@ -17,6 +17,7 @@ import { AppModule } from './app.module'
 import { AppConfig } from './config/types/app-config.interface'
 import { useContainer } from 'class-validator'
 import { NestExpressApplication } from '@nestjs/platform-express'
+import { PrismaService } from './prisma.service'
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const logger = new Logger('main')
@@ -43,6 +44,10 @@ async function bootstrap(): Promise<NestExpressApplication> {
   // ensure provider `onApplicationShutdown()` hooks are called if process receives a shutdown signal (also important for healthchecks)
   app.enableShutdownHooks()
 
+  // prevent prisma from interfering w/ nestjs shutdown hooks by adding a listener for prisma onExit event (refer to nestjs docs on prisma)
+  const prismaService: PrismaService = app.get(PrismaService)
+  prismaService.enableShutdownHooks(app)
+
   // configure ClassSerializerInterceptor to serialize dto/entity classes returned as responses to json
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
@@ -55,6 +60,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
         enableImplicitConversion: false,
       },
       forbidNonWhitelisted: true, // throw if an unrecognized property is received
+      forbidUnknownValues: true, // recommended per class-validator npm page
       // disableErrorMessages: true, // consider making an env config option: may want to disable verbose errors in production
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       exceptionFactory: (errors: ValidationError[]) =>
@@ -101,7 +107,6 @@ async function bootstrap(): Promise<NestExpressApplication> {
     logger.log(`🚀 Application environment: <${process.env.NODE_ENV}>`)
     logger.log(`🚀 Application listening on port <${appConfig.port}> at path <${globalPrefixValue}>`)
     logger.log(`🚀 Accepting requests from origin: <${appConfig.origin}>`)
-    logger.log('db url', process.env.DATABASE_URL)
   })
 
   const url = await app.getUrl()
