@@ -3,6 +3,7 @@ import { Prisma, PrismaClient } from '../src/generated/prisma-client' // default
 // import Chance from 'chance'
 
 const client = new PrismaClient()
+
 // var chance = new Chance()
 
 async function seed() {
@@ -11,6 +12,8 @@ async function seed() {
     email: 'admin@example.com',
     password: 'example', // @todo generate pass w/ hash
   }
+
+  const asdf = client.user.create({ data: user })
 
   await client.user.create({ data: user })
 

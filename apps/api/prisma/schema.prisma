@@ -1,19 +1,19 @@
-// Prisma schema file
-// Docs: https://pris.ly/d/prisma-schema
+// Prisma db schema file
 //
+// Docs: https://pris.ly/d/prisma-schema
 // Client docs: https://www.prisma.io/docs/concepts/components/prisma-client
 
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma-client"
 
-  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/referential-integrity
+  // @see https://www.prisma.io/docs/concepts/components/prisma-schema/relations/referential-integrity
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider             = "postgresql"
+  url                  = env("DATABASE_URL")
   referentialIntegrity = "foreignKeys"
   // shadowDatabaseUrl = env("DATABASE_URL")
 }
@@ -22,50 +22,85 @@ datasource db {
 // note: may require CREATE EXTENSION pgcrypto; if it doesn't exist on target db
 // `@unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid` // per PG docs gen_random_uuid() uses v4 -  uuid-ossp required
 // `@id @default(dbgenerated("public.uuid_generate_v4()"))` // per SO public is required
+// `uuid String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid`
+// `@default(uuid())`
 
-// apparently no concepts of 'base' model, partials, mixins, etc so audit fields need to be repeated
+// simple uuid pk (non-native field attributes) -   uuid String @id @default(uuid())
+
+// prisma default for DateTime will automatically convert to UTC
+// timestamptz @db.Timestamptz(x) where x is seconds precision (e.g. 3)
+
+// apparently there is no concept inheritance, partials, mixins, etc so audit fields need to be repeated
 
 enum Role {
-  USER
+  BASE
   ADMIN
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  uuid          String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email         String      @unique
-  name          String?
-
-  refreshToken  RefreshToken?
-  password      String
-  role          Role        @default(USER)
-
-  // createdAt  DateTime  @default(now())
-  timezone      String      @default("Etc/UTC")
-
-  // prisma default with DateTime will automatically convert to UTC
-  // timestamptz @db.Timestamptz(x) where x is seconds precision (e.g. 3)
-  createdAt     DateTime    @default(now()) @db.Timestamptz()
-  updatedAt     DateTime    @db.Timestamptz() @updatedAt
-
-  // emailVerifiedAt DateTime
-
-  posts Post[]
+  id           Int         @id @default(autoincrement())
+  uuid         String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt    DateTime    @default(now()) @db.Timestamptz()
+  updatedAt    DateTime    @updatedAt @db.Timestamptz()
+  verifiedAt   DateTime?   @db.Timestamptz()
+  email        String      @unique
+  name         String?
+  role         Role        @default(BASE)
+  accountId    Int?
+  account      Account?    @relation(fields: [accountId], references: [id])
+  secretId     Int         @unique
+  secret       UserSecret  @relation(fields: [secretId], references: [id])
+  profileId    Int         @unique
+  profile      UserProfile @relation(fields: [profileId], references: [id])
+  userSecretId Int
 }
 
-model RefreshToken {
-  token         String    @id
-  userId        Int
-  user          User      @relation(fields: [userId], references: [id])
-  expiryDate    DateTime
+// 1-1 required user profile
+model UserProfile {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User?
+  locale    String @default("en-US") // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/Locale
+  timezone  String @default("Etc/UTC")
+  hourCycle String @default("h12") // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/hourCycle
+  currency  String @default("USD")
 }
 
+// 1-1 required user secret (separated from user due to https://github.com/prisma/prisma/issues/5042)
+model UserSecret {
+  id                    Int       @id @default(autoincrement())
+  userId                Int       @unique
+  user                  User?
+  password              String
+  refreshToken          String?
+  refreshTokenExpiresAt DateTime? @db.Timestamptz()
+}
 
-model Post {
-  id        Int         @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean?    @default(false)
-  author    User?       @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Account {
+  id        Int             @id @default(autoincrement())
+  uuid      String          @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime        @default(now()) @db.Timestamptz()
+  updatedAt DateTime        @updatedAt @db.Timestamptz()
+  isActive  Boolean
+  invites   AccountInvite[]
+  users     User[]
+}
+
+model BillingProfile {
+  id                   Int      @id @default(autoincrement())
+  uuid                 String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt            DateTime @default(now()) @db.Timestamptz()
+  updatedAt            DateTime @updatedAt @db.Timestamptz()
+  stripeCustomerId     String
+  stripeSubscriptionId String?
+}
+
+model AccountInvite {
+  id        String   @id @default(uuid())
+  uuid      String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId Int?
+  account   Account? @relation(fields: [accountId], references: [id])
+  sentAt    DateTime @default(now())
+  email     String
+  isValid   Boolean  @default(true)
 }
