@@ -1,12 +1,11 @@
 import { Injectable, OnModuleInit, INestApplication } from '@nestjs/common'
-import { PrismaClient } from '../src/generated/prisma-client' // default configuration: '@prisma/client'
+import { PrismaClient } from '../src/generated/prisma-client' // note: default configuration imports from '@prisma/client'
 
 /**
  * NestJS service that wraps the Prisma database client.
  *
- * @link https://docs.nestjs.com/recipes/prisma
- * @link https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nestjs/src
- * @link
+ * @see {@link https://docs.nestjs.com/recipes/prisma}
+ * @see {@link https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nestjs/src}
  */
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
