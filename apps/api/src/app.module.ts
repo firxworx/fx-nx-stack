@@ -6,10 +6,9 @@ import appConfig from './config/app.config'
 import authConfig from './config/auth.config'
 // import databaseConfig from './config/database.config'
 import { AnyExceptionFilter } from './filters/any-exception.filter'
-import { AuthModule } from './modules/auth/auth.module'
+// import { AuthModule } from './modules/auth/auth.module'
 // import { DatabaseModule } from './modules/database/database.module'
-import { UsersModule } from './modules/users/users.module'
-import { PrismaService } from './prisma.service'
+import { UsersModule } from './modules/fx-users/users.module'
 
 @Module({
   imports: [
@@ -19,9 +18,9 @@ import { PrismaService } from './prisma.service'
     }),
     // DatabaseModule,
     // AuthModule,
-    // UsersModule,
+    UsersModule,
   ],
   controllers: [],
-  providers: [{ provide: APP_FILTER, useClass: AnyExceptionFilter }, PrismaService],
+  providers: [{ provide: APP_FILTER, useClass: AnyExceptionFilter }],
 })
 export class AppModule {}
